@@ -17,19 +17,30 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: |
+        if [ -f "package-lock.json" ]; then
+          npm ci
+        else
+          npm install
+        fi
     
     - name: Build Vite app
       run: npm run build
     
     - name: Verify dist directory
       run: |
-        ls -la dist/
-        if [ ! -f "dist/index.html" ]; then
-          echo "Error: dist/index.html not found!"
+        echo "Checking dist directory..."
+        ls -la
+        if [ -d "dist" ]; then
+          ls -la dist/
+          if [ ! -f "dist/index.html" ]; then
+            echo "Error: dist/index.html not found!"
+            exit 1
+          fi
+        else
+          echo "Error: dist directory not found!"
           exit 1
         fi
     
@@ -38,7 +49,7 @@ jobs:
     
     - name: Create Capacitor config
       run: |
-        cat > capacitor.config.json << EOF
+        cat > capacitor.config.json << 'EOF'
         {
           "appId": "it.yuradio80.app",
           "appName": "YURADIO80",
@@ -49,9 +60,7 @@ jobs:
           }
         }
         EOF
-    
-    - name: Initialize Capacitor
-      run: npx cap init yuradio80 it.yuradio80.app --web-dir=dist
+        cat capacitor.config.json
     
     - name: Add Android platform
       run: npx cap add android
@@ -71,7 +80,12 @@ jobs:
     
     - name: Build APK
       working-directory: ./android
-      run: ./gradlew assembleDebug --stacktrace
+      run: ./gradlew assembleDebug --stacktrace --info
+    
+    - name: List APK files
+      run: |
+        echo "Searching for APK files..."
+        find . -name "*.apk" -type f
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
@@ -79,3 +93,4 @@ jobs:
         name: yuradio80-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
+        if-no-files-found: error
