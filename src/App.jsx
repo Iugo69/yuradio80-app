@@ -94,7 +94,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const playlists = [
-    { id: 1, title: "80's Hits Collection", url: "https://www.youtube.com/playlist?list=PLjD7QY4r-t366cTyOQ1wppUWVeEaPnOia" },
+    { id: 1, title: "80's Hits Collection", url: "https://www.youtube.com/playlist?list=PLjD7QY4r-t34s39dCISmpbS3WrmvhlVNF" },
     { id: 2, title: "ItalianMix", url: "https://www.youtube.com/playlist?list=PLjD7QY4r-t34pgwcygpY3ZRlK8w4DHsGK" },
     { id: 3, title: "Best of Italo Disco", url: "https://www.youtube.com/playlist?list=PLjD7QY4r-t36BAI46GepKuvsIVKB35dxG" },
     { id: 4, title: "Cartoons Mix", url: "https://www.youtube.com/playlist?list=PLjD7QY4r-t37WvVW2KWeGKkDdOzdt0Zhp" },
